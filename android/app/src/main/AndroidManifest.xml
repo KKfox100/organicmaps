@@ -49,6 +49,13 @@
   <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
   <queries>
+    <!-- 【NavDash】骑行助手（外接仪表）的包名。
+         Android 11+ 的包可见性：不在 <queries> 里声明的包，
+         PackageManager.getPackageInfo() 会抛 NameNotFoundException，
+         NavDashSay.push() 因此在发广播**之前**就返回了 ——
+         表现就是「OM 本机念得很好，车上一点动静都没有」。
+         加这一行是链路能通的必要条件。 -->
+    <package android:name="com.rider.navdash" />
     <intent>
       <action android:name="android.intent.action.TTS_SERVICE"/>
     </intent>

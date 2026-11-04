@@ -34,6 +34,7 @@ import app.organicmaps.sdk.location.LocationUtils;
 import app.organicmaps.sdk.routing.RoutingController;
 import app.organicmaps.sdk.routing.RoutingInfo;
 import app.organicmaps.sdk.sound.MediaPlayerWrapper;
+import app.organicmaps.sdk.sound.NavDashSay;
 import app.organicmaps.sdk.sound.TtsPlayer;
 import app.organicmaps.sdk.util.Assert;
 import app.organicmaps.sdk.util.Config;
@@ -233,6 +234,11 @@ public class NavigationService extends Service implements LocationListener
 
     Logger.i(TAG, "Starting Navigation Foreground service");
 
+    // 【NavDash】开始导航时给骑手一句明确反馈。
+    // 放在 onStartCommand 而不是 onLocationUpdated：这里正好对应「导航刚被拉起」，
+    // 一次导航只会走到一次（本服务返回 START_NOT_STICKY，不会被系统重启重放）。
+    NavDashSay.push(this, "开始导航");
+
     try
     {
       ServiceCompat.startForeground(
@@ -294,6 +300,10 @@ public class NavigationService extends Service implements LocationListener
     final RoutingInfo routingInfo = Framework.nativeGetRouteFollowingInfo();
     if (routingInfo == null)
       return;
+
+    // 推给外接骑行仪表（ESP32）。见 NavDashBroadcast 的说明：
+    // 这里只发广播，BLE 由仪表 App 自己负责。
+    NavDashBroadcast.push(this, routingInfo);
 
     if (routingInfo.shouldPlayWarningSignal())
       mPlayer.playback(R.raw.speed_cams_beep);

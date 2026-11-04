@@ -310,6 +310,18 @@ public enum TtsPlayer
 
   public void speak(@NonNull String textToSpeak)
   {
+    // 【NavDash】先把原文转交给骑行助手，再决定本机要不要念。
+    //
+    // 【必须在 isReady() 之前】国产 ROM 的 TTS 引擎（实测小米
+    // com.xiaomi.mibrain.speech）经常出现 isReady()=false：日志里
+    // getUsableLanguages() 对一大片语言全部返回不支持。
+    // 一旦把转发放在 isReady() 之后，就会出现
+    // 「手机不外放（对，这是预期的）+ 车上也没声音（坏了）」——
+    // 两头都静音，而且日志里只有 OM 自己的 TtsPlayer 噪音，极难定位。
+    // 车上设备有它自己的 TTS，OM 的引擎能不能用，与它无关。
+    if (NavDashSay.push(mContext, textToSpeak))
+      return; // 已转交，且用户选了「静音手机语音」
+
     if (!isReady())
       return;
 
@@ -319,6 +331,15 @@ public enum TtsPlayer
 
   public void playTurnNotifications(@NonNull String[] turnNotifications)
   {
+    // 【NavDash】同 speak()：先逐条转交，再走本地播放。
+    // 这里是导航中真正的播报入口（NavigationService.onLocationUpdated 调），
+    // 也是 K70 上一直没声音的那条路径。
+    boolean handedOff = false;
+    for (String t : turnNotifications)
+      handedOff |= NavDashSay.push(mContext, t);
+    if (handedOff)
+      return; // 已转交，且用户选了「静音手机语音」
+
     if (!isReady())
       return;
 
