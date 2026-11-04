@@ -3,6 +3,20 @@
 </div>
 <h1 align="center">Organic Maps</h1>
 
+> ### ⚠️ This is a **NavDash fork**（魔改版）
+>
+> 本仓库为 [Organic Maps](https://github.com/organicmaps/organicmaps) 的 fork，用于配套自研的
+> **骑行导航仪表（ESP32-S3 + 手机 App）**。上游功能保持不变，只额外增加了两条显式广播：
+> 导航数据（`com.rider.navdash.OM_NAV`）与语音播报文本（`com.rider.navdash.OM_SAY`），
+> 由配套 App 接住后经 BLE 推到车上的仪表。
+>
+> 改了什么 / 为什么这么改 / 怎么在 Windows 上编译 / 怎么验证 —— 见 **[NAVDASH.md](NAVDASH.md)**。
+>
+> 编译产物包名 `app.organicmaps.web.debug`，构建任务 `./gradlew assembleWebDebug`。
+>
+> ---
+>
+
 **Organic Maps** is a privacy-first offline maps & GPS app for hiking, cycling, biking, and driving. Absolutely free. No ads. No tracking. Created and maintained by MapsWithMe (MAPS.ME) founders, developed with love by the open-source community. Powered by [OpenStreetMap](https://www.openstreetmap.org) data. Installed by [over 6 million users worldwide](https://organicmaps.app/news/2025-12-31/organic-maps-2025-year-in-review/).
 
 [<img src="docs/badges/apple-appstore.png" alt="App Store" width="140">](https://apps.apple.com/app/organic-maps/id1567437057)
