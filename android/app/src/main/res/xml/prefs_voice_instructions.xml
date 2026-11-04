@@ -28,6 +28,17 @@
       app:isPreferenceVisible="false"
       tools:isPreferenceVisible="true"
       android:title="@string/pref_tts_test_voice_title" />
+
+  <!-- 【NavDash】语音由手机播，还是由车上的 ESP32 播。
+       键名必须和 NavDashSay.PREF_MUTE 一致（navdash_mute_local），
+       而且必须落在默认 SharedPreferences 里 ——
+       androidx.preference 用的正是 "包名_preferences"，与 NavDashSay 读取的是同一份。
+       默认 false：两边都响，方便第一次确认链路。 -->
+  <SwitchPreferenceCompat
+      android:key="navdash_mute_local"
+      android:title="静音手机语音（只由车上的喇叭播）"
+      android:summary="关：手机和仪表同时播；开：只由 ESP32 仪表播"
+      android:defaultValue="false" />
   <Preference
       android:key="@string/pref_tts_open_system_settings"
       android:title="@string/pref_tts_open_system_settings" />
